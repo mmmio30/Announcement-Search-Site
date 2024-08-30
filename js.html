@@ -1,0 +1,417 @@
+<!-- 実装時変更 -->
+let url = 'https://script.google.com/macros/s/AKfycbwHmJtggPt5uN8Bk9pV3dSchQHEqf6ZI8BTtKnzCcU-5dY2yYASi-LjkRjYfUSfchGtRw/exec'
+
+
+<!-- //表示，非表示 -->
+function id_disp(id, disp){
+  document.getElementById(id).style.display = disp;
+}
+
+
+<!-- //アクセス時にlogin_reqを実行 -->
+window.onload = login_req();
+
+<!-- //キャッシュから初回かどうか判別し，初回ならパスワード認証を行う -->
+function login_req(){
+  const sessionKey = "accesed";
+  const sessionValue = true;
+
+  var typ = '';
+  var genre = '';
+  var stn = '';
+  var job = '';
+  var kywd = '';
+
+    <!-- //sessionStorageにsessionKeyというデータの有無を判別 -->
+    if (!sessionStorage.getItem(sessionKey)) {
+
+      <!-- 正解パスワード -->
+        <!-- //初回アクセス時の処理 -->
+        inp = window.prompt('パスワードを入力してください．', '');
+        if(inp == 'メイホウ'){
+            <!-- //パスワードがあっているときの処理 -->
+            <!-- //sessionStorageにデータを追加 -->
+            sessionStorage.setItem(sessionKey, sessionValue);
+            id_disp('typ', 'grid');
+            id_disp('header', 'inline');
+            id_disp('nav', 'flex');
+            id_disp('info_genre', 'inline');            
+        }
+        else{
+            <!-- //パスワードが違う時の処理 -->
+          id_disp('miss', 'inline');
+          }
+
+    } else {
+        <!-- //ここに通常アクセス時の処理 -->
+        console.log("アクセス済み");
+        id_disp('typ', 'grid');
+        id_disp('header', 'inline');
+        id_disp('nav', 'flex');
+        id_disp('info_genre', 'inline');
+    }
+
+
+}
+
+<!-- //最初へ戻るボタン -->
+function to_first(){
+  const sessionKey = "accesed";
+  const sessionValue = true;
+  sessionStorage.clear();
+  sessionStorage.setItem(sessionKey, sessionValue);
+  
+  window.open(url, '_top');
+}
+
+<!-- //幹線ジャンルボタン：工事，検査，全部，博総で表示変更 -->
+function kansen_genre(ele){
+  let val = ele.getAttribute('class');
+  let r = ele.getAttribute('value');
+  let kannnai = ['岡山', '福山', '三原', '広島', '岩国', '山口','福岡', '博総'];
+
+  if(r == kannnai[0]){
+    station = ['岡山','新倉敷'];
+  }
+  else if(r == kannnai[1]){
+    station = ['福山', '新尾道'];
+  }
+  else if(r == kannnai[2]){
+    station = ['三原', '東広島'];
+  }
+  else if(r == kannnai[3]){
+    station = ['広島', '広運（矢賀）'];
+  }
+  else if(r == kannnai[4]){
+    station = ['新岩国', '徳山'];
+  }
+  else if(r == kannnai[5]){
+    station = ['新山口', '厚狭', '新下関'];
+  }
+  else if(r == kannnai[6]){
+    station = ['小倉','鞍手', '博多'];
+  }
+  else if(r == kannnai[7]){
+    station = ['博総'];
+  }
+  else if (r == '全部'){
+    station = ['全部'];
+  }
+  stn = station;
+  id_disp('kansen_genre_container', 'none');
+  id_disp('kansen_job_container', 'inline');
+  id_disp('kansen_all', 'grid');
+
+  let job_genre;
+  <!-- //class値にkoujiが含まれていたらジャンルの非表示，jobと幹線工事を表示 -->
+  if(val.match(/kouji/)){
+    id_disp('kansen_kouji', 'grid');
+    id_disp('kansen_kensa', 'none');
+    job_genre = '工事';
+  }
+
+  <!-- //class値にkensaが含まれていたらジャンルの非表示，jobと幹線検査を表示 -->
+  else if(val.match(/kensa/)){
+    id_disp('kansen_kensa', 'grid');
+    id_disp('kansen_kouji', 'none');
+    job_genre = '検査';
+
+  }
+
+  <!-- //class値にallが含まれていたら両方表示 -->
+  else if(val.match(/all/)){
+    id_disp('kansen_kouji', 'grid');
+    id_disp('kansen_kensa', 'grid');
+    job_genre = '全部';
+  }
+
+  <!-- //想定外 => エラー画面 -->
+  else{
+    id_disp('index', 'none');
+    id_disp('error', 'inline');
+  }
+
+  sessionStorage.setItem('job_genre', job_genre);
+
+  <!-- 選択した管轄を上部に表示 -->
+  document.getElementById('info_stn').innerHTML = ele.getAttribute('value') +' ' + job_genre;
+  document.getElementById('info_stn').style.backgroundColor = '#fff'; 
+  document.getElementById('info_job').style.backgroundColor = '#ffb367'; 
+
+
+}
+
+
+<!-- //幹線仕事 =>キーワードへ表示変更 -->
+function kansen_job(ele){
+  let val = ele.getAttribute('value');
+  let jobList = [['分細','E細','軌狂','探傷'],['締結','マルタイ','スペノ','明整備','TK']];
+  let job_genre = sessionStorage.getItem('job_genre');
+  if(val == '全部'){
+    if (job_genre == '工事'){
+      val = jobList[1];
+    }
+    else if(job_genre == '検査'){
+      val = jobList[0];
+    }
+    else{
+      val = ['分細','E細','軌狂','探傷','締結','マルタイ','スペノ','明整備','TK'];
+    }
+  }
+  else{
+    val = [val];
+  }
+
+  job = val;
+  id_disp('kansen_all', 'none');
+  id_disp('kansen_kouji', 'none');
+  id_disp('kansen_kensa', 'none');
+  id_disp('kywd_sending', 'flex');
+  document.getElementById('info_job').innerHTML = ele.getAttribute('value') ;
+  document.getElementById('info_job').style.backgroundColor = '#fff'; 
+  document.getElementById('info_kywd').style.backgroundColor = '#ffb367'; 
+
+}
+
+
+
+<!-- //在来ジャンル：工事，検査，全部，で表示変更 -->
+function zairai_genre(ele){
+  let val = ele.getAttribute('class');
+  stn = [ele.getAttribute('value')];
+  if(stn == '呉線 芸備線'){
+    stn = ['呉線', '芸備線'];
+  }
+
+  id_disp('zairai_genre_container', 'none');
+  id_disp('zairai_job_container', 'inline');
+  id_disp('zairai_all', 'grid');
+  let job_genre;
+
+  <!-- //class値にkoujiが含まれていたらジャンルの非表示，jobと幹線工事を表示 -->
+  if(val.match(/kouji/)){
+    id_disp('zairai_kouji', 'grid');
+    id_disp('zairai_kensa', 'none');
+    job_genre = '工事';
+  }
+
+  <!-- //class値にkensaが含まれていたらジャンルの非表示，jobと幹線検査を表示 -->
+  else if(val.match(/kensa/)){
+    id_disp('zairai_kouji', 'none');
+    id_disp('zairai_kensa', 'grid');
+    job_genre = '検査';
+  }
+
+  <!-- //class値にallが含まれていたら両方表示 -->
+  else if(val.match(/all/)){
+    id_disp('zairai_kouji', 'grid');
+    id_disp('zairai_kensa', 'grid');
+    job_genre = '全部';
+  }
+
+  <!-- //想定外 =>エラー画面 -->
+  else{
+    id_disp('index', 'none');
+    id_disp('error', 'inline');
+  }
+
+  sessionStorage.setItem('job_genre', job_genre);
+  document.getElementById('info_stn').innerHTML = ele.getAttribute('value') + ' ' + job_genre ;
+  document.getElementById('info_stn').style.backgroundColor = '#fff'; 
+  document.getElementById('info_job').style.backgroundColor = '#ffb367'; 
+
+}
+
+
+<!-- //在来仕事選択 =>キーワード画面へ -->
+function zairai_job(ele){
+  let val = [ele.getAttribute('value')];
+  let jobList = [['分細','分機','軌狂','塗装'],['LG','在M','TK']];
+  let job_genre = sessionStorage.getItem('job_genre');
+  if(val[0] == '全部'){
+    if (job_genre == '工事'){
+      val = jobList[1];
+    }
+    else if(job_genre == '検査'){
+      val = jobList[0];
+    }
+    else if(job_genre == 全部){
+      val = ['分細','分機','軌狂','塗装','LG','在M','TK'];
+    }
+  }
+  else{
+    val = [val];
+  }
+
+  job = val
+  id_disp('zairai_all', 'none');
+  id_disp('zairai_kouji', 'none');
+  id_disp('zairai_kensa', 'none');
+  id_disp('kywd_sending', 'flex');
+  document.getElementById('info_job').innerHTML = ele.getAttribute('value') ;
+  document.getElementById('info_job').style.backgroundColor = '#fff'; 
+  document.getElementById('info_kywd').style.backgroundColor = '#ffb367'; 
+
+}
+
+
+<!-- //typ選択 -->
+function typ(ele){
+  let val = ele.getAttribute('value');
+  typ = val;
+
+  <!-- typ画面非表示 -->
+  id_disp('typ', 'none');
+
+  if(val == '幹線'){
+    document.getElementById('info_genre').innerHTML = val ;
+    id_disp('info_=1', 'inline');
+    document.getElementById('info_=1').innerHTML = '⇒';
+
+  <!-- 次の管内選択の背景変更 -->
+    id_disp('info_stn', 'inline');
+    document.getElementById('info_stn').innerHTML = '管内選択' ;
+    id_disp('info_=2', 'inline');
+    document.getElementById('info_=2').innerHTML = '⇒';
+    document.getElementById('info_stn').style.backgroundColor = '#ffb367'; 
+
+    id_disp('info_job', 'inline');
+    document.getElementById('info_job').innerHTML = '仕事選択' ;
+    id_disp('info_=3', 'inline');
+    document.getElementById('info_=3').innerHTML = '⇒';
+    id_disp('info_kywd', 'inline');
+    document.getElementById('info_kywd').innerHTML = 'キーワード入力';
+
+    id_disp(val, 'inline');
+
+  }
+  else if(val == '在来'){
+    document.getElementById('info_genre').innerHTML = val ;
+    id_disp('info_=1', 'inline');
+    document.getElementById('info_=1').innerHTML = '⇒';
+
+  <!-- 次の管内選択の背景変更 -->
+    id_disp('info_stn', 'inline');
+    document.getElementById('info_stn').innerHTML = '管内選択' ;
+    id_disp('info_=2', 'inline');
+    document.getElementById('info_=2').innerHTML = '⇒';
+    document.getElementById('info_stn').style.backgroundColor = '#ffb367'; 
+
+    id_disp('info_job', 'inline');
+    document.getElementById('info_job').innerHTML = '仕事選択' ;
+    id_disp('info_=3', 'inline');
+    document.getElementById('info_=3').innerHTML = '⇒';
+
+    id_disp('info_kywd', 'inline');
+    document.getElementById('info_kywd').innerHTML = 'キーワード入力';
+
+    id_disp(val, 'inline');
+
+
+  }
+  else if(val == 'ポン清'){
+    document.getElementById('info_genre').innerHTML = val ;
+    id_disp('info_=1', 'inline');
+    document.getElementById('info_=1').innerHTML = '⇒';
+
+    <!-- 次の管内選択の背景変更 -->
+    id_disp('info_stn', 'inline');
+    document.getElementById('info_stn').innerHTML = '管内選択' ;
+    id_disp('info_=2', 'inline');
+    document.getElementById('info_=2').innerHTML = '⇒';
+    document.getElementById('info_stn').style.backgroundColor = '#ffb367'; 
+
+
+    id_disp('info_kywd', 'inline');
+    document.getElementById('info_kywd').innerHTML = 'キーワード入力';
+
+    id_disp(val, 'inline');
+
+  }
+  else if(val == 'その他'){
+    document.getElementById('info_genre').innerHTML = val ;
+    id_disp('info_=1', 'inline');
+    document.getElementById('info_=1').innerHTML = '⇒';
+
+    id_disp('info_stn', 'inline');
+    document.getElementById('info_stn').innerHTML = '門扉選択' ;
+    id_disp('info_=2', 'inline');
+    document.getElementById('info_=2').innerHTML = '⇒';
+    document.getElementById('info_stn').style.backgroundColor = '#ffb367'; 
+
+
+    id_disp('info_kywd', 'inline');
+    document.getElementById('info_kywd').innerHTML = 'キーワード入力';
+
+    id_disp(val, 'inline');
+  }
+  else{
+    id_disp('index', 'none');
+    id_disp('error', 'inline');
+  }
+}
+
+<!-- //ポン清 =>駅選択 -->
+function ponsou_stn(ele){
+  stn = [ele.getAttribute('value')];
+  job = [''];
+  id_disp('ポン清', 'none');
+  id_disp('kywd_sending', 'flex');
+  document.getElementById('info_stn').innerHTML = ele.getAttribute('value');
+  document.getElementById('info_stn').style.backgroundColor = '#fff'; 
+  document.getElementById('info_kywd').style.backgroundColor = '#ffb367'; 
+
+
+}
+
+
+function sonota(ele){
+  let val = ele.getAttribute('value');
+  stn = [val];
+  job = [''];
+
+  id_disp('その他', 'none');
+  id_disp('kywd_sending', 'flex');
+  document.getElementById('info_stn').innerHTML = val;
+  document.getElementById('info_stn').style.backgroundColor = '#fff'; 
+  document.getElementById('info_kywd').style.backgroundColor = '#ffb367'; 
+
+}
+
+<!-- 送信 -->
+async function submitForm(){
+  let kywd = document.getElementById('kywd').value;
+
+
+  id_disp('kywd_sending', 'none');
+
+  <!-- info_submit以外初期化 -->
+  document.getElementById('info_genre').innerHTML = '';
+  document.getElementById('info_=1').innerHTML = '';
+  document.getElementById('info_stn').innerHTML = '';
+  document.getElementById('info_=2').innerHTML = '';
+  document.getElementById('info_job').innerHTML = '';
+  document.getElementById('info_=3').innerHTML = '';
+  document.getElementById('info_kywd').innerHTML = '';
+  document.getElementById('info_kywd').style.backgroundColor = '#fff'; 
+  id_disp('info_=1', 'none');
+  id_disp('info_=2', 'none');
+  id_disp('info_=3', 'none');
+  id_disp('info_genre', 'none');
+  id_disp('info_stn', 'none');
+  id_disp('info_job', 'none');
+  id_disp('info_kywd', 'none');
+  id_disp('info_submit', 'inline');
+  document.getElementById('info_submit').innerHTML = '検索中';
+
+
+  await google.script.run.withSuccessHandler(result).js1(typ, stn, job, kywd);
+
+
+
+}
+
+
+<!-- func result()はindex.htmlに -->
+<!-- < が使えなかったため -->
+      

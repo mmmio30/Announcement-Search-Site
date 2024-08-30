@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+    <base target="_top">
+
+<title>login</title>
+<style><?!= HtmlService.createHtmlOutputFromFile('css').getContent(); ?></style>
+
+</head>
+<body>
+    <div id="wrap" ontouchstart="">
+        <header id="header">
+            <!--実装時URL変更-->
+            <h1>明豊掲示板</h1>
+        </header>
+        <div id="nav">
+            <button id="reload" onclick="to_first()"><p><b>最初に戻る</b></p></button>
+        </div>
+
+        <div id="index">
+          <div id="info">
+            <div id="info_genre">ジャンル選択</div>
+            <div id="info_=1"></div>
+            <div id="info_stn"></div>
+            <div id="info_=2"></div>
+            <div id="info_job"></div>
+            <div id="info_=3"></div>
+            <div id="info_kywd"></div>
+            <div id="info_submit"></div>
+          </div>
+
+        <!-- 検索結果表示 -->
+        <div id="res">
+        </div>
+
+            <!--幹在選択画面-->
+            <div id="typ">
+                <button id="typ_kansen" value="幹線" onclick="typ(this)"><p>幹線</p></button>
+                <button id="typ_zairai" value="在来" onclick="typ(this)"><p>在来</p></button>
+                <button id="typ_ponsou" value="ポン清" onclick="typ(this)"><p>ポン清</p></button>
+                <button id="typ_sonota" value="その他" onclick="typ(this)"><p>その他</p></button>
+            </div>
+
+            <!--幹線-->
+            <div id="幹線">
+                <!--ジャンル選択-->
+                <div id="kansen_genre_container">
+                    <button id="okayama_kouji" class="kansen_genre_btn okayama kouji" name="kansen_genre" value="岡山" onclick="kansen_genre(this)"><p>岡山<br>工事</p></button>
+                    <button id="okayama_kensa" class="kansen_genre_btn okayama kensa" name="kansen_genre" value="岡山" onclick="kansen_genre(this)"><p>岡山<br>検査</p></button>
+                    <button id="fukuyama_kouji" class="kansen_genre_btn fukuyama kouji" name="kansen_genre" value="福山" onclick="kansen_genre(this)"><p>福山<br>工事</p></button>
+                    <button id="fukuyama_kensa" class="kansen_genre_btn fukuyama kensa" name="kansen_genre" value="福山" onclick="kansen_genre(this)"><p>福山<br>検査</p></button>
+                    <button id="mihara_kouji" class="kansen_genre_btn mihara kouji" name="kansen_genre" value="三原" onclick="kansen_genre(this)"><p>三原<br>工事</p></button>
+                    <button id="mihara_kensa" class="kansen_genre_btn mihara kensa" name="kansen_genre" value="三原" onclick="kansen_genre(this)"><p>三原<br>検査</p></button>
+                    <button id="hiroshima_kouji" class="kansen_genre_btn hiroshima kouji" name="kansen_genre" value="広島" onclick="kansen_genre(this)"><p>広島<br>工事</p></button>
+                    <button id="hiroshima_kensa" class="kansen_genre_btn hiroshima kensa" name="kansen_genre" value="広島" onclick="kansen_genre(this)"><p>広島<br>検査</p></button>
+                    <button id="iwakuni_kouji" class="kansen_genre_btn iwakuni kouji " name="kansen_genre" value="岩国" onclick="kansen_genre(this)"><p>岩国<br>工事</p></button>
+                    <button id="iwakuni_kensa" class="kansen_genre_btn iwakuni kensa" name="kansen_genre" value="岩国" onclick="kansen_genre(this)"><p>岩国<br>検査</p></button>
+                    <button id="yamaguti_kouji" class="kansen_genre_btn yamaguti kouji" name="kansen_genre" value="山口" onclick="kansen_genre(this)"><p>山口<br>工事</p></button>
+                    <button id="yamaguti_kensa" class="kansen_genre_btn yamaguti kensa" name="kansen_genre" value="山口" onclick="kansen_genre(this)"><p>山口<br>検査</p></button>
+                    <button id="fukuoka_kouji" class="kansen_genre_btn fukuoka kouji" name="kansen_genre" value="福岡" onclick="kansen_genre(this)"><p>福岡<br>工事</p></button>
+                    <button id="fukuoka_kensa" class="kansen_genre_btn fukuoka kensa" name="kansen_genre" value="福岡" onclick="kansen_genre(this)"><p>福岡<br>検査</p></button>
+                    <button id="hakasou" class="kansen_genre_btn hakasou kensa" name="kansen_genre" value="博総" onclick="kansen_genre(this)"><p>博総</p></button>
+                    <button id="all" class="kansen_genre_btn all" name="kansen_genre" value="全部" onclick="kansen_genre(this)" ><p>全部</p></button>
+                </div>
+
+                <!--仕事選択-->
+                <div id="kansen_job_container">
+                    <div id="kansen_all">
+                        <button id="kansen_job_all" class="kansen_job_btn" name="kansen_job" value="全部" onclick="kansen_job(this)"><p>全部</p></button>
+                        <button id="kansen_sonota" class="kansen_job_btn"  name="kansen_job" value="その他" onclick="kansen_job(this)"><p>その他</p></button>
+                    </div>
+                    <div id="kansen_kensa">
+                        <button id="kansen_bunsai" class="kansen_job_btn"  name="kansen_job" value="分細" onclick="kansen_job(this)"><p>分細</p></button>
+                        <button id="kansen_Esai" class="kansen_job_btn"  name="kansen_job" value="E細" onclick="kansen_job(this)"><p>E細</p></button>
+                        <button id="kansen_kigurui" class="kansen_job_btn"  name="kansen_job" value="軌狂" onclick="kansen_job(this)"><p>軌狂</p></button>
+                        <button id="kansen_tansyou" class="kansen_job_btn"  name="kansen_job" value="探傷" onclick="kansen_job(this)"><p>探傷</p></button>
+                    </div>
+                    <div id="kansen_kouji">
+                        <button id="kansen_teiketsu" class="kansen_job_btn" name="kansen_job" value="締結" onclick="kansen_job(this)"><p>締結</p></button>
+                        <button id="kansen_marutai" class="kansen_job_btn"  name="kansen_job" value="マルタイ" onclick="kansen_job(this)"><p>マルタイ</p></button>
+                        <button id="kansen_supeno" class="kansen_job_btn"  name="kansen_job" value="スぺノ" onclick="kansen_job(this)"><p>スペノ</p></button>
+                        <button id="kansen_akeseibi" class="kansen_job_btn"  name="kansen_job" value="明整備" onclick="kansen_job(this)"><p>明整備</p></button>
+                        <button id="kansen_TK" class="kansen_job_btn"  name="kansen_job" value="TK" onclick="kansen_job(this)"><p>TK</p></button>
+                        <div id="kouji_dammy"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!--在来-->
+            <div id="在来">
+                <!--ジャンル選択-->
+                <div id="zairai_genre_container">
+                    <div id="san_hiro">
+                        <div id="genre1"><p>山陽本線<br>広島管内</p></div>
+                        <button id="san_hiro_kensa" class="zairai_genre_btn kensa" name="zairai_genre" value="山陽本線（広島管内）" onclick="zairai_genre(this)"><p>検査</p></button>
+                        <button id="san_hiro_kouji" class="zairai_genre_btn kouji"  name="zairai_genre" value="山陽本線（広島管内）" onclick="zairai_genre(this)"><p>工事</p></button>
+                    </div>
+                    <div id="kure_geibi">
+                        <div id="genre2"><p>呉線<br>芸備線</p></div>
+                        <button id="kure_geibi_kensa" class="zairai_genre_btn kensa" name="zairai_genre" value="呉線 芸備線" onclick="zairai_genre(this)"><p>検査</p></button>
+                        <button id="kure_geibi_kouji" class="zairai_genre_btn kouji" name="zairai_genre" value="呉線 芸備線" onclick="zairai_genre(this)"><p>工事</p></button>
+                    </div>
+                    <div id="san_yama">
+                        <div id="genre3"><p>山陽本線<br>山口管内</p></div>
+                        <button id="san_yama_kensa" class="zairai_genre_btn kensa" name="zairai_genre" value="山陽本線（山口管内）" onclick="zairai_genre(this)"><p>検査</p></button>
+                        <button id="san_yama_kouji" class="zairai_genre_btn kouji" name="zairai_genre" value="山陽本線（山口管内）" onclick="zairai_genre(this)"><p>工事</p></button>
+                    </div>
+                    <div id="iwa_toku">
+                        <div id="genre4"><p>岩徳線<br><span id="hide">見えないところ</span></p></div>
+                        <button id="tan_yamakensa" class="zairai_genre_btn kensa" name="zairai_genre" value="岩徳線"  onclick="zairai_genre(this)"><p>検査</p></button>
+                        <button id="tan_yama_kouji" class="zairai_genre_btn kouji" name="zairai_genre" value="岩徳線" onclick="zairai_genre(this)"><p>工事</p></button>
+                    </div>                    
+                    <div id="tan_yama">
+                        <div id="genre5"><p>単線<br>山口管内</p></div>
+                        <button id="tan_yamakensa" class="zairai_genre_btn kensa" name="zairai_genre" value="単線（山口）" onclick="zairai_genre(this)"><p>検査</p></button>
+                        <button id="tan_yama_kouji" class="zairai_genre_btn kouji" name="zairai_genre" value="単線（山口）" onclick="zairai_genre(this)"><p>工事</p></button>
+                    </div>
+                </div>
+
+                <!--仕事選択-->
+                <div id="zairai_job_container">
+                    <div id="zairai_all">
+                        <button id="zairai_job_all" class="zairai_job_btn" name="zairai_job" value="全部" onclick="zairai_job(this)"><p>全部</p></button>
+                        <button id="zairai_sonota" class="zairai_job_btn" name="zairai_job" value="その他" onclick="zairai_job(this)"><p>その他</p></button>
+                    </div>
+                    <div id="zairai_kensa">
+                        <button id="zairai_bubsai" class="zairai_job_btn" name="zairai_job" value="分細" onclick="zairai_job(this)"><p>分細</p></button>
+                        <button id="zairai_bunki" class="zairai_job_btn" name="zairai_job" value="分機" onclick="zairai_job(this)"><p>分機</p></button>
+                        <button id="kigurui" class="zairai_job_btn" name="zairai_job" value="軌狂" onclick="zairai_job(this)"><p>軌狂</p></button>
+                        <button id="tosou" class="zairai_job_btn" name="zairai_job" value="塗装" onclick="zairai_job(this)"><p>塗装</p></button>
+                    </div>
+                    <div id="zairai_kouji">
+                        <button id="zairai_marutai" class="zairai_job_btn" name="zairai_job" value="在M" onclick="zairai_job(this)"><p>在M</p></button>
+                        <button id="zairai_LG" class="zairai_job_btn" name="zairai_job" value="LG" onclick="zairai_job(this)"><p>LG</p></button>
+                        <button id="zairai_TK" class="zairai_job_btn" name="zairai_job" value="TK" onclick="zairai_job(this)"><p>TK</p></button>
+                        <div id="kouji_dammy2"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!--ポン清-->
+            <div id="ポン清">
+                <!--駅選択画面-->
+                <div id="ponsou_all">
+                    <button id="ponsou_stn_all" name="ponsou_stn" value="全部" onclick="ponsou_stn(this)"><p>全部</p></button>
+                    <button id="ponsou_sonota" name="ponsou_stn" value="その他" onclick="ponsou_stn(this)"><p>その他
+                    </p></button>
+                </div>
+                <div id="ponsou_stn">
+                    <button id="ponsou_okayama" name="ponsou_stn" value="岡山" onclick="ponsou_stn(this)"><p>岡山</p></button>
+                    <button id="ponsou_shinkurashiki" name="ponsou_stn" value="新倉敷" onclick="ponsou_stn(this)"><p>新倉敷</p></button>
+                    <button id="ponsou_fukuyama" name="ponsou_stn" value="福山" onclick="ponsou_stn(this)"><p>福山</p></button>
+                    <button id="ponsou_shinonomiti" name="ponsou_stn" value="新尾道" onclick="ponsou_stn(this)"><p>新尾道</p></button>
+                    <button id="ponsou_mihara" name="ponsou_stn" value="三原" onclick="ponsou_stn(this)"><p>三原</p></button>
+                    <button id="ponsou_higashihiroshima" name="ponsou_stn" value="東広島" onclick="ponsou_stn(this)"><p>東広島</p></button>
+                    <button id="ponsou_hiroshima" name="ponsou_stn" value="広島" onclick="ponsou_stn(this)"><p>広島</p></button>
+                    <button id="ponsou_iwakuni" name="ponsou_stn" value="新岩国" onclick="ponsou_stn(this)"><p>新岩国</p></button>
+                    <button id="ponsou_tokuyama" name="ponsou_stn" value="徳山" onclick="ponsou_stn(this)"><p>徳山</p></button>
+                    <button id="ponsou_shinyamaguti" name="ponsou_stn" value="新山口" onclick="ponsou_stn(this)"><p>新山口</p></button>
+                    <button id="ponsou_asa" name="ponsou_stn" value="厚狭" onclick="ponsou_stn(this)"><p>厚狭</p></button>
+                    <button id="ponsou_shinshimonoseki" name="ponsou_stn" value="新下関" onclick="ponsou_stn(this)"><p>新下関</p></button>
+                    <button id="ponsou_kokura" name="ponsou_stn" value="小倉" onclick="ponsou_stn(this)"><p>小倉</p></button>
+                    <button id="ponsou_hakata" name="ponsou_stn" value="博多" onclick="ponsou_stn(this)"><p>博多</p></button>
+                </div>
+            </div>
+            <div id="その他">
+                <div id="sonota">
+                    <button id="sonota_all" name="sonota" value="全部" onclick="sonota(this)"><p>全部</p></button>
+                    <button id="sonota_sonota" name="sonota" value="その他" onclick="sonota(this)"><p>その他</p></button>
+                </div> 
+                <div id="sonota_monpi">
+                  <p>門扉は下記から選択</p>
+                  <div id="monpi">
+                    <button id="sonota_okayama" name="monpi" value="岡山" onclick="sonota(this)"><p>岡山</p></button>
+                    <button id="sonota_fukuyama" name="monpi" value="福山" onclick="sonota(this)"><p>福山</p></button>
+                    <button id="sonota_mihara" name="monpi" value="三原" onclick="sonota(this)"><p>三原</p></button>
+                    <button id="sonota_hiroshima" name="monpi" value="広島" onclick="sonota(this)"><p>広島</p></button>
+                    <button id="sonota_iwakuni" name="monpi" value="岩国" onclick="sonota(this)"><p>岩国</p></button>
+                    <button id="sonota_yamaguti" name="monpi" value="山口" onclick="sonota(this)"><p>山口</p></button>
+                    <button id="sonota_fukuoka" name="monpi" value="福岡" onclick="sonota(this)"><p>福岡</p></button>
+                    <div id="dammy3"></div>
+                  </div>
+                </div>               
+            </div>
+
+            <!--キーワード，送信画面-->
+            <div id="kywd_sending">
+                <p>連絡事項の中から検索したい言葉を<br>単語で入力してください<br>(現在は1単語のみ対応)</p>
+                    <input type="text" id="kywd" name="kywd" size="30" placeholder="記入なしでも可">
+                    <button id="sending"  onclick="submitForm()"><p>検索</p></button>
+            </div>
+        </div>
+
+        <!--認証失敗時の画面-->
+        <div id="miss">
+            <p>miss</p>
+            <button onclick="to_first()">リロード</button>
+        </div>
+
+        <!--エラー画面-->
+        <div id="error">
+            <p>予期せぬ動作を検知しました．</p>
+            <!--エラーコード実装する-->
+            <p>エラーコード : </p>
+            <p>何度も発生する場合は担当者へ連絡してください．</p>
+            <button id="error" onclick="??"><p>最初へ戻る</p></button>
+        </div>
+
+      <script><?!= HtmlService.createHtmlOutputFromFile('js').getContent(); ?>
+
+      // 検索結果表示
+        function result(v){
+          document.getElementById('info_submit').innerHTML = '検索結果 : ' + v.length + ' 件';
+
+          id_disp('res', 'inline');
+          let res = '';
+          for (let i = 0; i < v.length; i++){
+            let val = ''
+            val += '<details><summary><b>' + v[i][0] + ' : ' + v[i][1] + ' : ' +  v[i][2] + ' : ' +  v[i][3] + '</b><br><span class="open">' + v[i][4] +'</span></summary>';
+            val += '<li>' + v[i][5] + '</li>';
+
+            if(v[i][6] != ''){
+              for(let j = 0; j < v[i][6].length; j++){
+                val += '<li><img src = \'' + v[i][6] + '\'></li>';
+              }
+            }
+            val += '</details>';
+            res += val;
+          }
+
+          document.getElementById('res').innerHTML = res;
+        }
+      
+      </script>
+    </div>
+</body>
+</html>
