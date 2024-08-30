@@ -1,9 +1,11 @@
-function test(){
-  let genre = '幹線';
-  let stn = ['岡山'];
-  let job = ['分細'];
-  let kywd = '';
+function js1(){
 
+  console.time('ジャンル選別');
+
+  let genre = 'その他';
+  let stn = ['福山'];
+  let job = [''];
+  let kywd = '';
 
   let st =  SpreadsheetApp.openById("1Zzpb-YB-r2yex-XxcHRQVFK-L5SjdD4V6kEC2WwnW_8").getSheetByName("フォームの回答 1");
 
@@ -78,6 +80,8 @@ function test(){
 
   }
 Logger.log('genre選別後' +rowNum);
+console.timeEnd('ジャンル選別');
+console.time('stn選別');
 
 //stn選別
 
@@ -109,7 +113,8 @@ Logger.log('genre選別後' +rowNum);
       }
     }
     Logger.log('stn選別後'+rowNum);
-
+    console.timeEnd('stn選別');
+    console.time('job選別');
 
   //job選別
     if(genre != 'ポン清'){
@@ -142,6 +147,8 @@ Logger.log('genre選別後' +rowNum);
     }
   
   Logger.log('job選別後'+rowNum);
+  console.timeEnd('job選別');
+  console.time('kywd選別');
 
   if(kywd != "") {
     let kywdFinder = st.getRange("I2:I").createTextFinder(kywd).findAll();
@@ -158,6 +165,8 @@ Logger.log('genre選別後' +rowNum);
 
 
   Logger.log('kywd選別後'+rowNum);
+  console.timeEnd('kywd選別');
+  console.time('res');
 
   //検索後行列からindexに返す配列の作成
   let result = []
@@ -173,7 +182,7 @@ Logger.log('genre選別後' +rowNum);
     let mgs = st.getRange(rowNum[i] +1, naiyou_Col).getValue();
     let head_mgs = mgs.substr(0, 20);
 
-    if(head_mgs > 20){
+    if(head_mgs.length > 20){
       head_mgs += '...';
     }
 
@@ -190,9 +199,10 @@ Logger.log('genre選別後' +rowNum);
     }
 
     result.push([daystr, res_genre, [res_stn], [res_job], head_mgs, mgs, res_img])
-
+    
 
   }
+  console.timeEnd('res');
   return result;
 
 
