@@ -26,9 +26,10 @@ function login_req(){
     if (!sessionStorage.getItem(sessionKey)) {
 
       <!-- 正解パスワード -->
+      const pass = 'これは試作サイトです！';
         <!-- //初回アクセス時の処理 -->
-        inp = window.prompt('パスワードを入力してください．', '');
-        if(inp == 'メイホウ'){
+        inp = window.prompt('パスワードを入力してください．', pass);
+        if(inp == pass){
             <!-- //パスワードがあっているときの処理 -->
             <!-- //sessionStorageにデータを追加 -->
             sessionStorage.setItem(sessionKey, sessionValue);
