@@ -1,5 +1,5 @@
 <!-- 実装時変更 -->
-let url = 'https://script.google.com/macros/s/AKfycbwHmJtggPt5uN8Bk9pV3dSchQHEqf6ZI8BTtKnzCcU-5dY2yYASi-LjkRjYfUSfchGtRw/exec'
+let url = 'https://script.google.com/macros/s/AKfycbz6r9Y64CGN6Hjot40Rlx4cxfIh1EB4wiQf_UharkwkTIL93wxFkZnV5beTHy0hHxWdCQ/exec'
 
 
 <!-- //表示，非表示 -->
@@ -383,7 +383,6 @@ function sonota(ele){
 async function submitForm(){
   let kywd = document.getElementById('kywd').value;
 
-
   id_disp('kywd_sending', 'none');
 
   <!-- info_submit以外初期化 -->
@@ -406,13 +405,18 @@ async function submitForm(){
   document.getElementById('info_submit').innerHTML = '検索中';
 
 
-  await google.script.run.withSuccessHandler(result).js1(typ, stn, job, kywd);
+  google.script.run.withSuccessHandler(result).js1(typ, stn, job, kywd);
 
 
 
 }
 
 
-<!-- func result()はindex.htmlに -->
-<!-- < が使えなかったため -->
+<!-- // 検索結果表示 -->
+function result(v){
+  document.getElementById('info_submit').innerHTML = '検索結果 : ' + v.length + ' 件';
+
+  id_disp('res', 'inline');
+  document.getElementById('res').innerHTML = v;
+}
       

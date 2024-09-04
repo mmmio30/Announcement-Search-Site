@@ -1,23 +1,18 @@
-//URLを踏んだ時に実行される
-function doGet() {
-  let htmlIndex = HtmlService.createTemplateFromFile("index");
-  return htmlIndex.evaluate().setTitle("明豊掲示板");
-}
+// ジャンルで分けたシートの要素をすべて配列に落としスクレイピング
 
-
-
-
-function js1(genre, stn, job, kywd){
+function test3(){
 
   console.time('time');
 
+  let genre = 'その他';
+  let stn = ['福山'];
+  let job = [];
+  let kywd = '';
 
   // sheetデータ
   let sheetID = '1Zzpb-YB-r2yex-XxcHRQVFK-L5SjdD4V6kEC2WwnW_8';
   let st  = SpreadsheetApp.openById(sheetID).getSheetByName(genre);
 
-
-  // 読み取り配列のCol設定
   let timeStamp_Col = 0;
   let genre_Col = 1;
   let stn_Col = 2;
@@ -31,25 +26,25 @@ function js1(genre, stn, job, kywd){
 
   // 最終行を読み込みすべて配列に落とす
   let sheet_items = st.getDataRange().getValues();
-  Logger.log('genre => ' + sheet_items.length);
+  Logger.log(sheet_items.length);
 
 
   //stn選別
   sheet_items = spliceList(sheet_items, stn_Col, stn);
-  Logger.log('stn => ' + sheet_items.length);
+  Logger.log(sheet_items.length);
 
 
   // job選別
   if(genre == '在来' || genre == '幹線'){
     sheet_items = spliceList(sheet_items, job_Col, job);
-    Logger.log('job => ' + sheet_items.length);
+    Logger.log(sheet_items.length);
   }
 
   // kywdがmasterlistのkywd_Col列に含まれているものだけ残す
   if(kywd != ''){
     masterList = masterList.filter(row => row[naiyou_Col].includes(kywd));
   }
-  Logger.log('kywd => ' + sheet_items.length);
+  Logger.log(sheet_items.length);
 
 
 
@@ -59,36 +54,22 @@ function js1(genre, stn, job, kywd){
   let head_mgs_max_length = 20;
   let result = [];
   for (let i = 0; i < sheet_items.length; i++){
-    // １件分のお知らせ配列，
-    let value = [];
-
-    // 日付のフォーマット
-    let daystr = Utilities.formatDate(sheet_items[i][timeStamp_Col], 'JST', 'yyyy/MM/dd');
-
-    // 見出し文章
+    let value = '';
     let head_mgs = sheet_items[i][naiyou_Col].substr(0, head_mgs_max_length);
     if (head_mgs.length > head_mgs_max_length){
       head_mgs += '...';
     }
-
-    // お知らせ
-    value += '<details><summary><b>' + daystr + ' | ' + sheet_items[i][genre_Col] + ' | ' + sheet_items[i][stn_Col] + ' | ' + sheet_items[i][job_Col] + '</b><br>';
+    value += '<details><summary><b>' + sheet_items[i][timeStamp_Col] + sheet_items[i][genre_Col] + sheet_items[i][stn_Col] + sheet_items[i][job_Col] + '</b><br>';
     value += '<span class="open">' + head_mgs +'</span></summary>';
-    value += '<li>' + sheet_items[i][naiyou_Col] + '</li>';
+    value += '<li>' + sheet_items[i][naiyou_Col] + '<li>';
 
-    // 画像はある時だけ
     let img_list = sheet_items[i][img_Col].split(','); 
     if (img_list != ''){
       for (let j = 0; j < img_list.length; j++){
-        value += '<li><img src = \'https://lh3.google.com/u/0/d/' + img_list[j] + '\'></li>';
+        value += '<li><img src = \'' + img_list[j] + '\'></li>';
       }
     }
-
-    // お知らせ終わり
     value += '</details>';
-
-    // 1件分のお知らせ配列を追加
-    result.push(value);
   }
 
 

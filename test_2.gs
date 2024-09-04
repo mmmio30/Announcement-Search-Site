@@ -1,64 +1,87 @@
-// ジャンルで分けたシートから選別
+// 回答シートから選別
 
-function test(){
+function test2(){
 
   console.time('time');
 
   let genre = 'その他';
   let stn = ['福山'];
-  let job = [];
+  let job = [''];
   let kywd = '';
 
-  // sheetデータ
-  let sheetID = '1Zzpb-YB-r2yex-XxcHRQVFK-L5SjdD4V6kEC2WwnW_8';
-  let ss  = SpreadsheetApp.openById(sheetID);
-
-
-  //幹在Pでスプレッドシートの読み取り列を変える
-  let timeStamp_Col = 1;
-  let genre_Col = 2;
-  let stnCol = 0;
-  let jobCol = 0;
-  let naiyou_Col = 0;
-  let img_Col = 0;
-
-  if(genre == '在来'){
-    stnCol = 3;
-    jobCol = 4;
-    naiyou_Col = 5;
-    img_Col = 6;
-  }
-  else if(genre == '幹線'){
-    stnCol = 3;
-    jobCol = 4;
-    naiyou_Col = 5;
-    img_Col = 6;
-  }
-  else if(genre == 'ポン清'){
-    stnCol = 3;
-    naiyou_Col = 4;
-    img_Col = 5;
-  }
-  else if(genre == 'その他'){
-    stnCol = 3;
-    naiyou_Col = 4;
-    img_Col = 5;
-  }
-  else{
-    Logger.log('error')
-  }
-  let st = ss.getSheetByName(genre);
+  let st =  SpreadsheetApp.openById("1Zzpb-YB-r2yex-XxcHRQVFK-L5SjdD4V6kEC2WwnW_8").getSheetByName("フォームの回答 1");
 
   // rowNomにすべての行番号を入れる
   let rowNum = []
-  var lastRow = st.getLastRow();
+  var lastRow = st.getRange(st.getMaxRows(), 1).getNextDataCell(SpreadsheetApp.Direction.UP).getRow();
 
   for(let n = 1; n < lastRow; n++){
     rowNum.push(n)
   }
-  Logger.log('genre選別後' + lastRow + '行');
+  Logger.log('ST全部で' + lastRow + '行');
 
 
+      //幹在Pでスプレッドシートの読み取り列を変える
+    let timeStamp_Col = 1;
+    let genre_Col = 2;
+    let zairai_stn_Col = 3;
+    let zairai_job_Col = 4;
+    let kansen_stn_Col = 5;
+    let kansen_joc_Col = 6;
+    let ponsou_stn_Col = 7;
+    let sonota_monpi_Col = 8;
+    let naiyou_Col = 9;
+    let img_Col = 10;
+
+    let stnCol = 0;
+    let jobCol = 0;
+    if(genre == '在来'){
+      stnCol = zairai_stn_Col;
+      jobCol = zairai_job_Col;
+    }
+    else if(genre == '幹線'){
+      stnCol = kansen_stn_Col;
+      jobCol = kansen_joc_Col;
+    }
+    else if(genre == 'ポン清'){
+      stnCol = ponsou_stn_Col;
+    }
+    else if(genre == 'その他'){
+      stnCol = sonota_monpi_Col;
+    }
+    else{
+      Logger.log('error')
+    }
+
+
+
+
+//ジャンル選別
+  //空欄の時エラー
+  if(genre == null){
+    res = "未選択がありました．";
+    return res;
+  } 
+  else if(genre != "全部") {
+    let num = 0;
+    const itemRowNum = rowNum.length;
+    for(let x = 0; x < itemRowNum; x++) {
+      let check = false;
+      genreCheck = st.getRange(rowNum[x - num] + 1, 2).getValue().split(", ");
+      for(let i = 0; i < genreCheck.length; i++) {
+        if(genre == genreCheck[i]) {
+          check = true;
+        }
+      }
+      if(check == false) {
+        let dlt = rowNum.indexOf(rowNum[x - num]);
+        rowNum.splice(dlt,1);
+        num++;
+      }
+    }
+
+  }
+Logger.log('genre選別後' +rowNum);
 
 
 //stn選別
@@ -141,6 +164,7 @@ function test(){
 
   Logger.log('kywd選別後'+rowNum);
 
+
   //検索後行列からindexに返す配列の作成
   let result = []
   for (let i = 0; i < rowNum.length; i++){
@@ -171,14 +195,12 @@ function test(){
       }
     }
 
-    result.push([daystr, res_genre, [res_stn], [res_job], head_mgs, mgs, res_img]);
-
+    result.push([daystr, res_genre, [res_stn], [res_job], head_mgs, mgs, res_img])
+    
 
   }
-
-  Logger.log(result.length);
   console.timeEnd('time');
   return result;
-
-
 }
+
+

@@ -12,7 +12,7 @@
     <div id="wrap" ontouchstart="">
         <header id="header">
             <!--実装時URL変更-->
-            <h1>これは試作です！リンク再確認！！</h1>
+            <h1>これは試作です！リンク再確認！!！</h1>
         </header>
         <div id="nav">
             <button id="reload" onclick="to_first()"><p><b>最初に戻る</b></p></button>
@@ -204,35 +204,10 @@
             <!--エラーコード実装する-->
             <p>エラーコード : </p>
             <p>何度も発生する場合は担当者へ連絡してください．</p>
-            <button id="error" onclick="??"><p>最初へ戻る</p></button>
+            <button id="reload" onclick="to_first()"><p><b>最初に戻る</b></p></button>
         </div>
 
-      <script><?!= HtmlService.createHtmlOutputFromFile('js').getContent(); ?>
-
-      // 検索結果表示
-        function result(v){
-          document.getElementById('info_submit').innerHTML = '検索結果 : ' + v.length + ' 件';
-
-          id_disp('res', 'inline');
-          let res = '';
-          for (let i = 0; i < v.length; i++){
-            let val = ''
-            val += '<details><summary><b>' + v[i][0] + ' : ' + v[i][1] + ' : ' +  v[i][2] + ' : ' +  v[i][3] + '</b><br><span class="open">' + v[i][4] +'</span></summary>';
-            val += '<li>' + v[i][5] + '</li>';
-
-            if(v[i][6] != ''){
-              for(let j = 0; j < v[i][6].length; j++){
-                val += '<li><img src = \'' + v[i][6] + '\'></li>';
-              }
-            }
-            val += '</details>';
-            res += val;
-          }
-
-          document.getElementById('res').innerHTML = res;
-        }
-      
-      </script>
+      <script><?!= HtmlService.createHtmlOutputFromFile('js').getContent(); ?></script>
     </div>
 </body>
 </html>
